@@ -55,8 +55,10 @@
 
 #if defined(CUL_V3)
 #  define TTY_BUFSIZE          128      // RAM: TTY_BUFSIZE*4
-#  define HAS_MBUS                      // PROGMEM: 2536
-#  define MBUS_NO_TX                       // PROGMEM:  962
+#  undef HAS_MBUS                       // PROGMEM: 4255
+#if defined(HAS_MBUS)
+#  define MBUS_NO_TX                    // PROGMEM:  962
+#endif
 #  define HAS_RFNATIVE                  // PROGMEM:  580
 #  define HAS_KOPP_FC                   // PROGMEM: 3370
 #endif
