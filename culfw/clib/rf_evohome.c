@@ -138,7 +138,7 @@ const uint8_t PROGMEM EVOHOME_CFG_ASYNC_38400[] = {
 
   CC1100_FREQ2,     0x21, // 0D Frequency control word, high byte 868.4MHz
   CC1100_FREQ1,     0x65, // 0E Frequency control word, middle byte
-  CC1100_FREQ0,     0x6c, // 0F Frequency control word, low byte
+  CC1100_FREQ0,     0xcc, // 0F Frequency control word, low byte
   CC1100_MDMCFG4,   0x6a, // 10 Modem configuration
   CC1100_MDMCFG3,   0x83, // 11 Modem configuration
   CC1100_MDMCFG2,   0x10, // 12 Modem configuration      GFSK/No Manchester, preamble or sync

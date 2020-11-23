@@ -105,12 +105,8 @@ SRC += ../../clib/rf_mbus.c ../../clib/mbus/manchester.c ../../clib/mbus/3outof6
 endif
 
 all:
-	make TARGET=CUL_V2 MCU=at90usb162 mostly_clean build size
-	make TARGET=CUL_V2_HM MCU=at90usb162 mostly_clean build size
-	make TARGET=CUL_V2_MAX MCU=at90usb162 mostly_clean build size
 	make TARGET=CUL_V3 MCU=atmega32u4 mostly_clean build size
-	make TARGET=CUL_V4 MCU=atmega32u2 mostly_clean build size
-	make TARGET=CUL_V3_ZWAVE MCU=atmega32u4 mostly_clean build size
+	#make TARGET=CUL_V3_ZWAVE MCU=atmega32u4 mostly_clean build size
 
 build: elf hex eep lss sym
 

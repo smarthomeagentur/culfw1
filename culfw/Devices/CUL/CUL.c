@@ -13,7 +13,7 @@
 
 #include <string.h>
 
-#include <Drivers/USB/USB.h>     // USB Functionality
+#include <Drivers/USB/USB.h> // USB Functionality
 
 #include "spi.h"
 #include "cc1100.h"
@@ -22,17 +22,17 @@
 #include "delay.h"
 #include "display.h"
 #include "fncollection.h"
-#include "led.h"		// ledfunc
+#include "led.h" // ledfunc
 #include "ringbuffer.h"
 #include "rf_receive.h"
-#include "rf_send.h"		// fs20send
+#include "rf_send.h" // fs20send
 #include "ttydata.h"
-#include "fht.h"		// fhtsend
-#include "fastrf.h"		// fastrf_func
-#include "rf_router.h"		// rf_router_func
+#include "fht.h"       // fhtsend
+#include "fastrf.h"    // fastrf_func
+#include "rf_router.h" // rf_router_func
 
 #ifdef HAS_MEMFN
-#include "memory.h"		// getfreemem
+#include "memory.h" // getfreemem
 #endif
 #ifdef HAS_ASKSIN
 #include "rf_asksin.h"
@@ -68,84 +68,81 @@
 #include "rf_evohome.h"
 #endif
 
-
 const PROGMEM t_fntab fntab[] = {
 
 #ifdef HAS_ASKSIN
-  { 'A', asksin_func },
+    {'A', asksin_func},
 #endif
-  { 'B', prepare_boot },
+    {'B', prepare_boot},
 #ifdef HAS_MBUS
-  { 'b', rf_mbus_func },
+    {'b', rf_mbus_func},
 #endif
-  { 'C', ccreg },
+    {'C', ccreg},
 #ifdef HAS_RWE
-  { 'E', rwe_func },
+    {'E', rwe_func},
 #endif
-  { 'e', eeprom_factory_reset },
-  { 'F', fs20send },
+    {'e', eeprom_factory_reset},
+    {'F', fs20send},
 #ifdef HAS_FASTRF
-  { 'f', fastrf_func },
+    {'f', fastrf_func},
 #endif
 #ifdef HAS_RAWSEND
-  { 'G', rawsend },
+    {'G', rawsend},
 #endif
 #ifdef HAS_HOERMANN_SEND
-  { 'h', hm_send },
+    {'h', hm_send},
 #endif
 #ifdef HAS_INTERTECHNO
-  { 'i', it_func },
+    {'i', it_func},
 #endif
 #ifdef HAS_RAWSEND
-  { 'K', ks_send },
+    {'K', ks_send},
 #endif
 #ifdef HAS_KOPP_FC
-  { 'k', kopp_fc_func },
+    {'k', kopp_fc_func},
 #endif
 #ifdef HAS_BELFOX
-  { 'L', send_belfox },
+    {'L', send_belfox},
 #endif
-  { 'l', ledfunc },
+    {'l', ledfunc},
 #ifdef HAS_RAWSEND
-  { 'M', em_send },
+    {'M', em_send},
 #endif
 #ifdef HAS_MEMFN
-  { 'm', getfreemem },
+    {'m', getfreemem},
 #endif
 #ifdef HAS_RFNATIVE
-  { 'N', native_func },
+    {'N', native_func},
 #endif
-  { 'R', read_eeprom },
-  { 'T', fhtsend },
-  { 't', gettime },
+    {'R', read_eeprom},
+    {'T', fhtsend},
+    {'t', gettime},
 #ifdef HAS_UNIROLL
-  { 'U', ur_send },
+    {'U', ur_send},
 #endif
 #ifdef HAS_RF_ROUTER
-  { 'u', rf_router_func },
+    {'u', rf_router_func},
 #endif
-  { 'V', version },
+    {'V', version},
 #ifdef HAS_EVOHOME
-  { 'v', rf_evohome_func },
+    {'v', rf_evohome_func},
 #endif
-  { 'W', write_eeprom },
-  { 'X', set_txreport },
-  { 'x', ccsetpa },
+    {'W', write_eeprom},
+    {'X', set_txreport},
+    {'x', ccsetpa},
 #ifdef HAS_SOMFY_RTS
-  { 'Y', somfy_rts_func },
+    {'Y', somfy_rts_func},
 #endif
 #ifdef HAS_MORITZ
-  { 'Z', moritz_func },
+    {'Z', moritz_func},
 #endif
 #ifdef HAS_ZWAVE
-  { 'z', zwave_func },
+    {'z', zwave_func},
 #endif
-  { 0, 0 },
+    {0, 0},
 };
 
-
-void
-start_bootloader(void)
+void start_bootloader(void)
 {
   cli();
 
@@ -154,41 +151,40 @@ start_bootloader(void)
   MCUCR = _BV(IVSEL);
 
 #if defined(CUL_V3) || defined(CUL_V4)
-#  define jump_to_bootloader ((void(*)(void))0x3800)
+#define jump_to_bootloader ((void (*)(void))0x3800)
 #endif
 #if defined(CUL_V2)
-#  define jump_to_bootloader ((void(*)(void))0x1800)
+#define jump_to_bootloader ((void (*)(void))0x1800)
 #endif
   jump_to_bootloader();
 }
 
-int
-main(void)
+int main(void)
 {
   wdt_enable(WDTO_2S);
   clock_prescale_set(clock_div_1);
 
-  MARK433_PORT |= _BV( MARK433_BIT ); // Pull 433MHz marker
-  MARK915_PORT |= _BV( MARK915_BIT ); // Pull 915MHz marker
+  MARK433_PORT |= _BV(MARK433_BIT); // Pull 433MHz marker
+  MARK915_PORT |= _BV(MARK915_BIT); // Pull 915MHz marker
 
   // if we had been restarted by watchdog check the REQ BootLoader byte in the
   // EEPROM ...
-  if(bit_is_set(MCUSR,WDRF) && erb(EE_REQBL)) {
-    ewb( EE_REQBL, 0 ); // clear flag
+  if (bit_is_set(MCUSR, WDRF) && erb(EE_REQBL))
+  {
+    ewb(EE_REQBL, 0); // clear flag
     start_bootloader();
   }
 
-
   // Setup the timers. Are needed for watchdog-reset
-  OCR0A  = 249;                            // Timer0: 0.008s = 8MHz/256/250
+  OCR0A = 249; // Timer0: 0.008s = 8MHz/256/250
   TCCR0B = _BV(CS02);
   TCCR0A = _BV(WGM01);
   TIMSK0 = _BV(OCIE0A);
 
   TCCR1A = 0;
-  TCCR1B = _BV(CS11) | _BV(WGM12);         // Timer1: 1us = 8MHz/8
+  TCCR1B = _BV(CS11) | _BV(WGM12); // Timer1: 1us = 8MHz/8
 
-  MCUSR &= ~(1 << WDRF);                   // Enable the watchdog
+  MCUSR &= ~(1 << WDRF); // Enable the watchdog
 
   led_init();
   spi_init();
@@ -199,14 +195,15 @@ main(void)
   input_handle_func = analyze_ttydata;
 #ifdef HAS_RF_ROUTER
   rf_router_init();
-  display_channel = (DISPLAY_USB|DISPLAY_RFROUTER);
+  display_channel = (DISPLAY_USB | DISPLAY_RFROUTER);
 #else
   display_channel = DISPLAY_USB;
 #endif
 
   LED_OFF();
 
-  for(;;) {
+  for (;;)
+  {
     USB_USBTask();
     CDC_Task();
     RfAnalyze_Task();
@@ -241,6 +238,5 @@ main(void)
 #ifdef HAS_EVOHOME
     rf_evohome_task();
 #endif
-
   }
 }
