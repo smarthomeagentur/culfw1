@@ -104,9 +104,14 @@ ifeq ($(TARGET), CUL_V3)
 SRC += ../../clib/rf_mbus.c ../../clib/mbus/manchester.c ../../clib/mbus/3outof6.c ../../clib/mbus/mbus_packet.c ../../clib/mbus/crc.c
 endif
 
+ifeq ($(TARGET), CUL_V3_MBUS)
+SRC += ../../clib/rf_mbus.c ../../clib/mbus/manchester.c ../../clib/mbus/3outof6.c ../../clib/mbus/mbus_packet.c ../../clib/mbus/crc.c
+endif
+
 all:
 	make TARGET=CUL_V3 MCU=atmega32u4 mostly_clean build size
-	#make TARGET=CUL_V3_ZWAVE MCU=atmega32u4 mostly_clean build size
+	make TARGET=CUL_V3_MBUS MCU=atmega32u4 mostly_clean build size
+	make TARGET=CUL_V3_ZWAVE MCU=atmega32u4 mostly_clean build size
 
 build: elf hex eep lss sym
 
@@ -125,7 +130,7 @@ size:
 
 
 usbprogram:
-	@echo 'specify one of: usbprogram_v2 usbprogram_v2_hm usbprogram_v3 usbprogram_v4'
+	@echo 'specify one of: usbprogram_v2 usbprogram_v2_hm usbprogram_v3 usbprogram_v3_mbus usbprogram_v4'
 
 usbprogram_v4: TARGET=CUL_V4
 usbprogram_v4: MCU=atmega32u2
@@ -134,6 +139,10 @@ usbprogram_v4: do_usbprogram
 usbprogram_v3: TARGET=CUL_V3
 usbprogram_v3: MCU=atmega32u4
 usbprogram_v3: do_usbprogram
+
+usbprogram_v3_mbus: TARGET=CUL_V3
+usbprogram_v3_mbus: MCU=atmega32u4
+usbprogram_v3_mbus: do_usbprogram
 
 usbprogram_v2: TARGET=CUL_V2
 usbprogram_v2: MCU=at90usb162
@@ -198,7 +207,7 @@ mostly_clean:
 	@$(REMOVE) $(SRC:.c=.i)
 
 clean: mostly_clean
-	@$(REMOVE) *.hex
+	#@$(REMOVE) *.hex
 	@$(REMOVE) *.eep
 	@$(REMOVE) *.cof
 	@$(REMOVE) *.elf
