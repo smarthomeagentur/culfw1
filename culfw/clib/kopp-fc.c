@@ -127,7 +127,7 @@ const PROGMEM const uint8_t CC1100_Kopp_CFG[EE_CC1100_CFG_SIZE] = {
 	0x00, 				// 0C  FSCTRL0   00    00    Frequency Offset = 0
 	0x21, 				// 0D  FREQ2    *1E    21    FREQ[23..0] = f(carrier)/f(XOSC)*2^16  -> 868,3Mhz / 26Mhz * 2^16 = 2188650 dez = 21656A hex  (f(XOSC)=26 Mhz)
 	0x65, 				// 0E  FREQ1    *C4    65    s.o.
-	0xB0, 				// 0F  FREQ0    *EC    e8    s.o.
+	0x6A, 				// 0F  FREQ0    *EC    e8    s.o.
 	0x97, 				// 10  MDMCFG4  *8C    55    bWidth 162,5 kHz   (Kopp 50 Khz!, but does not work))
 	0x83, 				// 11  MDMCFG3  *22   *43    Drate: 4785,5 Baud   (Kopp: 4789 Baud, measured value !! may be increase by 1 is needed (83) because value should be 4800) doesn't work better with 81/83 )
 	0x16, 				// 12  MDMCFG2  *02   *B0    DC Blocking filter enabled, GFSK modulation (Kopp uses FSK, do not know whether 2-FSK, GFSK odr 4-FSK), 

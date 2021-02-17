@@ -179,7 +179,7 @@ const USB_Descriptor_String_t ManufacturerString PROGMEM =
 {
   Header:           {Size: USB_STRING_LEN(10),
                      Type: DTYPE_String},
-  UnicodeString:    L"SHA"
+  UnicodeString:    L"busware.de"
 };
 
 const USB_Descriptor_String_t ProductString PROGMEM =
